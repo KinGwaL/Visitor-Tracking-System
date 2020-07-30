@@ -282,22 +282,31 @@
 //             localStorage.setItem(jsonData, 'visitor');
 //             document.getElementById('insertForm').submit();
             
-            $.ajax({
-            url: 'insertrecord',
-            method: 'POST',
-            data: jsonData,
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: function(data) {
+            $.post("insertrecord", jsonData, function(data) {
                 showSuccessMessage("Record Inserted!");
-                    hideLoader()
-            },
-            error: function(err) {
+                hideLoader()
+            }, function(err) {
                 console.log(err);
                 showErrorMessage(err.statusText);
-                hideLoader()
-            }
-            })
+                hideLoader();
+            });
+            
+//             $.ajax({
+//             url: 'insertrecord',
+//             method: 'POST',
+//             data: jsonData,
+//             contentType: "application/json; charset=utf-8",
+//             dataType: "json",
+//             success: function(data) {
+//                 showSuccessMessage("Record Inserted!");
+//                     hideLoader()
+//             },
+//             error: function(err) {
+//                 console.log(err);
+//                 showErrorMessage(err.statusText);
+//                 hideLoader()
+//             }
+//             })
         }
     }
           
