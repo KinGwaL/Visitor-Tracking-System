@@ -34,7 +34,7 @@
             width: 100%;
             margin: 20px 0;
         }
-        .loader {
+        #loading {
             background: url('loading.gif') no-repeat center center;
             position: absolute;
             top: 0;
@@ -48,7 +48,7 @@
     </style>
 </head>
 <body>
-    <div class="loader"></div>
+    <div id="loading"></div>
     <nav class="navbar navbar-expand-md navbar-dark">
       <a class="navbar-brand" href="/index.html">Salesforce</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navBar" aria-controls="navBar" aria-expanded="false" aria-label="Toggle navigation">
@@ -262,12 +262,12 @@
     function showLoader() {
         $('#loading').show();
     }
-          
+    
+    $(window).ready(hideLoader);
     window.addEventListener('load', function () {
       let selectedDeviceId;
       const codeReader = new ZXing.BrowserQRCodeReader()
       console.log('ZXing code reader initialized')
-      hideLoader();
       codeReader.getVideoInputDevices()
         .then((videoInputDevices) => {
           selectedDeviceId = videoInputDevices[0].deviceId
