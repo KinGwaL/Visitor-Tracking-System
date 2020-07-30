@@ -207,7 +207,7 @@
         var visitor = data.rows[0];
         var location = $("#location").val();
         
-        if (!visitor.location__c.contains(location)){
+        if (!visitor["location__c"].contains(location)){
             showErrorMessage("you're not allowed to access this area.");
             return false;
         }
