@@ -39,7 +39,7 @@
             position: absolute;
             top: 0;
             left: 0;
-            height: 100%;
+            height: auto;
             width: 100%;
             z-index: 9999999;
             opacity: 0.7;
@@ -103,36 +103,6 @@
                         </div>
                     </div>
                     
-                    <div class="form-row">
-                        <video id="video"></video>
-                    </div>
-                    
-                      <div class="form-row">
-                        <div class="col-md-4 mb-4">
-                            <label for="name">Full Name <span class="required">*</span></label>
-                            <input type="text" class="form-control" id="name" placeholder="Chan Tai Man" required>
-                        </div>
-                        <div class="col-md-4 mb-4">
-                            <label for="companyName">Company <span class="required">*</span></label>
-                            <input type="text" class="form-control" id="companyName" placeholder="Salesforce" value="Salesforce" required>
-                        </div>
-                        <div class="col-md-4 mb-4">
-                            <label for="identityId">Identity ID</label>
-                            <input type="text" class="form-control" id="identityId" placeholder="A1234" >
-                        </div>
-                      </div>
-                    
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label for="phone">Phone <span class="required">*</span></label>
-                            <input type="tel" class="form-control" id="phone" placeholder="52345678" required>
-                        </div>
-                        <div class="form-group col-md-6">
-                          <label for="email">Email</label>
-                          <input type="email" class="form-control" id="email" placeholder="Email">
-                        </div>
-                    </div>
-                    
                     <div class="form-group">
                         <label for="countryStay">In the pass 14 days, what countries have you been to or stay (include transit and transfer)? If no, just leave it blank.</label>
                         <input type="text" class="form-control" id="countryStay" placeholder="Countries">
@@ -143,32 +113,12 @@
                         <input type="text" class="form-control" id="notes" placeholder="">
                     </div>
                     
-<!--                     <div class="form-group">
-                        <label for="signature-pad">Signature <span class="required">*</span></label>
-                        <div class="wrapper center">
-                          <canvas id="signature-pad" class="signature-pad" height=200 width=400></canvas>
-                        </div>
-                    </div> -->
-                
-<!--                     <div class="form-group agreement">
-                        <div class="form-check">
-                          <input class="form-check-input" type="checkbox" id="agreement" required>
-                          <label class="form-check-label" for="agreement">Agree to <a href="https://www.salesforce.com/company/legal/agreements/" target="_blank">terms and conditions</a></label>
-                        </div>
-                    </div> -->
-                    
+                    <div class="form-row">
+                        <video id="video"></video>
+                    </div>
+
                 </div>
                 <div class="panel-footer footer">
-<!--                     <div id="message" class="alert alert-info" role="alert" style="display: none;">
-                        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
-                        <span id="messageMessage"></span>
-                    </div>
-                    <div id="error" class="alert alert-danger" role="alert" style="display: none;">
-                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-                        <span class="sr-only">Error:</span>
-                        <span id="errorMessage"></span>
-                    </div> -->
-<!--                     <button type="submit" class="btn btn-success">Insert Record</button> -->
                 </div>
             </div>
         </form>
@@ -197,7 +147,7 @@
       codeReader.decodeFromInputVideoDeviceContinuously(selectedDeviceId, 'video', (result, err) => {
         if (result) {
           // properly decoded qr code
-          console.log('Found QR code!', result)
+            console.log('Found QR code!', result)
             searchVisitor(result['text']);
          // document.getElementById('result').textContent = result.text
         }
@@ -230,6 +180,8 @@
 
     function searchVisitor(visitorId) {
         showLoader()
+        hideAllMessage()
+        
         $.ajax({
             url: 'visitorsearch',
             method: 'post',
@@ -240,17 +192,15 @@
             dataType: "json",
             success: function(data) {
                 console.log(data);
-                $("#messageMessage").text("Record Inserted!");
-                $("#message").show();
-                hideLoader()
+                if (visitorValidation(data) == true) {
+                    submitRecord(data);
+                }
             },
             error: function(err) {
-                errorMessage.text(err.responseJSON.error);
-                error.show();
+                showErrorMessage(err.responseJSON.error);
                 hideLoader()
             }
         })
-        
     }
           
     function visitorValidation(data) {
@@ -258,14 +208,31 @@
         var location = $("#location").val();
         
         if (!visitor.location__c.contains(location)){
-            var errorMessage = $("#errorMessage");
-            var error = $("#error");
-            errorMessage.text(err.responseJSON.error);
-            error.show();
-            
+            showErrorMessage("you're not allowed to access this area.");
             return false;
         }
        
+        return true;
+    }
+      
+    function hideAllMessage() {
+        $("#error").hide();
+        $("#message").hide();
+    }
+          
+    function showErrorMessage(message) {
+        var errorMessage = $("#errorMessage");
+        var error = $("#error");
+        errorMessage.text(message);
+        error.show();
+        $("#message").hide();
+    }
+    function showSuccessMessage(message) {
+        var errorMessage = $("#errorMessage");
+        var error = $("#error");
+        error.hide();
+        $("#messageMessage").text(message);
+        $("#message").show();
     }
           
     function hideLoader() {
@@ -275,6 +242,54 @@
         $('#loading').show();
     }
     
+    function submitRecord(data) {
+        showLoader()
+        hideAllMessage()
+        
+        var visitor = data.rows[0];
+        var location = $("#location").val();
+        var temperature = $("#temperature").val();
+        var countryStay = $("#countryStay").val();
+        var notes = $("#notes").val();
+        var name = visitor.name;
+        var companyName = visitor.Company_Name__c;
+        var phone = visitor.phone_number__c;
+        var email = visitor.email__c;
+        var identityId = visitor.id__c;
+        var sfid = visitor.sfid;
+        
+        if (temperature.length == 0 || location.length == 0) {
+            showErrorMessage("All of the fields are required.");
+        }else {
+            $.ajax({
+                url: 'insert',
+                method: 'post',
+                data: JSON.stringify({
+                    name: name,
+                    location: location,
+                    companyName: companyName,
+                    temperature: temperature,
+                    phone: phone,
+                    email: email,
+                    countryStay: countryStay,
+                    identityId: identityId,
+                    notes: notes,
+                    sfid: sfid
+                }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function(data) {
+                    showSuccessMessage("Record Inserted!");
+                    hideLoader()
+                },
+                error: function(err) {
+                    showErrorMessage(err.responseJSON.error);
+                    hideLoader()
+                }
+            })
+        }
+    }
+          
     $(window).ready(hideLoader);
     window.addEventListener('load', function () {
       let selectedDeviceId;
@@ -290,89 +305,5 @@
         })
     })
   </script>
-
-    <script>
-        $(function() {
-            
-//             var signaturePad = new SignaturePad(document.getElementById('signature-pad'), {
-//               backgroundColor: 'rgba(245, 245, 245, 1)',
-//               penColor: 'rgb(0, 0, 0)'
-//             });
-
-//             $("#clear").click(function (event) {
-//                event.preventDefault();
-//                signaturePad.clear();
-//             });
-            
-            $("#insertForm").submit(function(event) {
-                event.preventDefault();
-
-                var errorMessage = $("#errorMessage");
-                var error = $("#error");
-                error.hide();
-
-                $("#message").hide();
-
-                var name = $("#name").val();
-                var location = $("#location").val();
-                var companyName = $("#companyName").val();
-                var temperature = $("#temperature").val();
-                var phone = $("#phone").val();
-                var email = $("#email").val();
-                var countryStay = $("#countryStay").val();
-                var identityId = $("#identityId").val();
-                var notes = $("#notes").val();
-                //var agreement = document.getElementById("agreement");
-                var agreement = true;
-                var signature = "signature";
-                
-                if (name.length == 0 || companyName.length == 0 || temperature.length == 0 || phone.length == 0 || location.length == 0) {
-                    errorMessage.text("All of the fields are required.");
-                    error.show();
-                }
-                else {
-                    //var signature = signaturePad.toDataURL('image/jpeg', 0.2);
-                    
-                    $.ajax({
-                        url: event.target.action,
-                        method: event.target.method,
-                        data: JSON.stringify({
-                            name: name,
-                            location: location,
-                            companyName: companyName,
-                            temperature: temperature,
-                            phone: phone,
-                            email: email,
-                            countryStay: countryStay,
-                            identityId: identityId,
-                            notes: notes,
-                            signature: signature
-                        }),
-                        contentType: "application/json; charset=utf-8",
-                        dataType: "json",
-                        success: function(data) {
-                            $("#name").val("");
-                            $("#companyName").val("");
-                            $("#temperature").val("");
-                            $("#phone").val("");
-                            $("#countryStay").val("");
-                            $("#email").val("");
-                            $("#identityId").val("");
-                            //$("#notes").val("");
-                            //signaturePad.clear();
-                            //$( "#agreement" ).prop( "checked", false );
-                            $("#messageMessage").text("Record Inserted!");
-                            $("#message").show();
-                        },
-                        error: function(err) {
-                            errorMessage.text(err.responseJSON.error);
-                            error.show();
-                        }
-                    })
-                }
-            });
-        });
-
-    </script>
 </body>
 </html>
