@@ -256,18 +256,7 @@
         var phone = visitor.phone_number__c;
         var email = visitor.email__c;
         var identityId = visitor.id__c;
-        var sfid = visitor.sfid;
-        
-        console.log(location);
-        console.log(temperature);
-        console.log(countryStay);
-        console.log(notes);
-        console.log(name);
-        console.log(companyName);
-        console.log(phone);
-        console.log(email);
-        console.log(identityId);
-        console.log(sfid);
+        var salesforceId = visitor.sfid;
         
         if (temperature.length == 0 || location.length == 0) {
             showErrorMessage("All of the fields are required.");
@@ -285,7 +274,7 @@
                     countryStay: countryStay,
                     identityId: identityId,
                     notes: notes,
-                    sfid: sfid
+                    salesforceId: salesforceId
                 }),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
