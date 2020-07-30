@@ -283,6 +283,7 @@
                     hideLoader()
                 },
                 error: function(err) {
+                    console.log(err);
                     showErrorMessage(err.responseJSON.error);
                     hideLoader()
                 }
