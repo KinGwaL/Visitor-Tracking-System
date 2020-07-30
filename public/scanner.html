@@ -27,7 +27,7 @@
         }
         
         #notes {
-          height: 100px;
+          height: 50px;
         }
         
         #video {
@@ -283,21 +283,21 @@
 //             document.getElementById('insertForm').submit();
             
             $.ajax({
-                url: 'insertrecord',
-                type: 'POST',
-                data: jsonData,
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function(data) {
-                    showSuccessMessage("Record Inserted!");
+            url: 'insertrecord',
+            method: 'POST',
+            data: jsonData,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function(data) {
+                showSuccessMessage("Record Inserted!");
                     hideLoader()
-                },
-                error: function(err) {
-                    console.log(err);
-                    showErrorMessage(err.statusText);
-                    hideLoader()
-                }
-            });
+            },
+            error: function(err) {
+                console.log(err);
+                showErrorMessage(err.statusText);
+                hideLoader()
+            }
+            })
         }
     }
           
