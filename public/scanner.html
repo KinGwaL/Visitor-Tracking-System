@@ -276,22 +276,26 @@
         if (temperature.length == 0 || location.length == 0) {
             showErrorMessage("All of the fields are required.");
         }else {
-            $.ajax({
-                url: 'insertrecord',
-                method: 'post',
-                data: jsonData,
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function(data) {
-                    showSuccessMessage("Record Inserted!");
-                    hideLoader()
-                },
-                error: function(err) {
-                    console.log(err);
-                    showErrorMessage(err.statusText);
-                    hideLoader()
-                }
-            })
+            
+            localStorage.setItem(jsonData, 'visitor');
+            document.getElementById('insertForm').submit();
+            
+//             $.ajax({
+//                 url: 'insertrecord',
+//                 method: 'post',
+//                 data: jsonData,
+//                 contentType: "application/json; charset=utf-8",
+//                 dataType: "json",
+//                 success: function(data) {
+//                     showSuccessMessage("Record Inserted!");
+//                     hideLoader()
+//                 },
+//                 error: function(err) {
+//                     console.log(err);
+//                     showErrorMessage(err.statusText);
+//                     hideLoader()
+//                 }
+//             })
         }
     }
           
@@ -310,5 +314,33 @@
         })
     })
   </script>
+    
+    <script>
+        $(function() {
+            
+            $("#insertForm").submit(function(event) {
+                event.preventDefault();
+                var jsonData = localStorage.getItem('visitor');
+                
+                $.ajax({
+                    url: event.target.action,
+                    method: event.target.method,
+                    data: jsonData,
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function(data) {
+                        showSuccessMessage("Record Inserted!");
+                        hideLoader()
+                    },
+                    error: function(err) {
+                        console.log(err);
+                        showErrorMessage(err.statusText);
+                        hideLoader()
+                    }
+                })
+            });
+        });
+
+    </script>
 </body>
 </html>
