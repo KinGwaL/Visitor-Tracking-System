@@ -242,11 +242,11 @@
         $('#loading').show();
     }
     
-    function submitRecord(data) {
+    function submitRecord(visitorData) {
         showLoader()
         hideAllMessage()
         
-        var visitor = data.rows[0];
+        var visitor = visitorData.rows[0];
         var location = $("#location").val();
         var temperature = $("#temperature").val();
         var countryStay = $("#countryStay").val();
@@ -258,13 +258,7 @@
         var identityId = visitor.id__c;
         var salesforceId = visitor.sfid;
         
-        if (temperature.length == 0 || location.length == 0) {
-            showErrorMessage("All of the fields are required.");
-        }else {
-            $.ajax({
-                url: 'insertrecord',
-                method: 'post',
-                data: JSON.stringify({
+        var jsonData = JSON.stringify({
                     name: name,
                     location: location,
                     companyName: companyName,
@@ -275,7 +269,17 @@
                     identityId: identityId,
                     notes: notes,
                     salesforceId: salesforceId
-                }),
+                });
+        
+        console.log(jsonData);
+        
+        if (temperature.length == 0 || location.length == 0) {
+            showErrorMessage("All of the fields are required.");
+        }else {
+            $.ajax({
+                url: 'insertrecord',
+                method: 'post',
+                data: jsonData,
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function(data) {
