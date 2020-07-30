@@ -81,7 +81,7 @@ app.post('/refresh', function(req, res) {
     });
 });
 
-app.post('/selectvisitor', function(req, res) {
+app.post('/visitorsearch', function(req, res) {
     pg.connect(process.env.DATABASE_URL, function (err, conn, done) {
         if (err) console.log(err);
         conn.query(
