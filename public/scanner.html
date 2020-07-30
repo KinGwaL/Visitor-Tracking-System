@@ -258,11 +258,12 @@
         var identityId = visitor.id__c;
         var sfid = visitor.sfid;
         
+        
         if (temperature.length == 0 || location.length == 0) {
             showErrorMessage("All of the fields are required.");
         }else {
             $.ajax({
-                url: 'insert',
+                url: 'insertrecord',
                 method: 'post',
                 data: JSON.stringify({
                     name: name,
