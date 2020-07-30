@@ -126,7 +126,7 @@ app.post('/insert', function(req, res) {
         // watch for any connect issues
         if (err) console.log(err);
         conn.query(
-            'INSERT INTO salesforce.Medical__c (Name__c, Phone__c, Temperature__c, Company_Name__c, email__c, Identity_Id__c, Accessed_Countries__c, Notes__c) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)',
+            'INSERT INTO salesforce.Medical__c (Name__c, Phone__c, Temperature__c, Company_Name__c, email__c, Identity_Id__c, Accessed_Countries__c, Notes__c) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)',
             [req.body.name.trim(), req.body.phone.trim(), req.body.temperature.trim(), req.body.companyName.trim(), req.body.email.trim(), req.body.identityId.trim(), req.body.countryStay.trim(), req.body.notes.trim()],
             function(err, result) {
                 done();
