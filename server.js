@@ -100,7 +100,7 @@ app.post('/visitorsearch', function(req, res) {
     });
 });
 
-app.post('/insert', function(req, res) {
+app.post('/insertrecord', function(req, res) {
     pg.connect(process.env.DATABASE_URL, function (err, conn, done) {
         // watch for any connect issues
         if (err) console.log(err);
