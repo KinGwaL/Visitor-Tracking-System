@@ -81,6 +81,25 @@ app.post('/refresh', function(req, res) {
     });
 });
 
+app.post('/selectvisitor', function(req, res) {
+    pg.connect(process.env.DATABASE_URL, function (err, conn, done) {
+        if (err) console.log(err);
+        conn.query(
+            'SELECT * FROM salesforce.Visitor__c WHERE id__c = $1',
+            [req.body.visitorId.trim()],
+            function(err, result) {
+                done();
+                if (err) {
+                    res.status(400).json({error: err.message});
+                }
+                else {
+                    res.json(result);
+                }
+            }
+        );
+    });
+});
+
 app.post('/insert', function(req, res) {
     pg.connect(process.env.DATABASE_URL, function (err, conn, done) {
         // watch for any connect issues
