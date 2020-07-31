@@ -185,6 +185,8 @@
                 if (visitorValidation(data) == true) {
                     submitRecord(data);
                    // setTimeout(submitRecord, 1000, data);
+                }else {
+                    hideLoader()
                 }
             },
             error: function(err) {
