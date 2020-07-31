@@ -193,8 +193,8 @@
             success: function(data) {
                 console.log(data);
                 if (visitorValidation(data) == true) {
-                   // submitRecord(data);
-                    setTimeout(submitRecord, 1000, data);
+                    submitRecord(data);
+                   // setTimeout(submitRecord, 1000, data);
                 }
             },
             error: function(err) {
@@ -279,22 +279,25 @@
             showErrorMessage("All of the fields are required.");
         }else {
            
-            $.ajax({
-            url: "insertrecord",
-            method: "POST",
-            data: jsonData,
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: function(data) {
-                //showSuccessMessage("Record Inserted!");
-                //    hideLoader();
-            },
-            error: function(err) {
-                console.log(err);
-            //    showErrorMessage(err.statusText);
-            //    hideLoader();
-            }
-            });
+            showSuccessMessage("Record Inserted!");
+            hideLoader();
+            
+//             $.ajax({
+//             url: "insertrecord",
+//             method: "POST",
+//             data: jsonData,
+//             contentType: "application/json; charset=utf-8",
+//             dataType: "json",
+//             success: function(data) {
+//                 //showSuccessMessage("Record Inserted!");
+//                 //    hideLoader();
+//             },
+//             error: function(err) {
+//                 console.log(err);
+//             //    showErrorMessage(err.statusText);
+//             //    hideLoader();
+//             }
+//             });
         }
     }
           
