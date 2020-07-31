@@ -138,6 +138,7 @@
                         <span class="sr-only">Error:</span>
                         <span id="errorMessage"></span>
                     </div>
+                    <div id="placeHolder"></div>
                     <button type="submit" class="btn btn-success">Insert Record</button>
                 </div>
             </div>
@@ -149,6 +150,7 @@
     <script src="https://getbootstrap.com/docs/4.0/assets/js/vendor/popper.min.js"></script>
     <script src="https://getbootstrap.com/docs/4.0/dist/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>
+    <script type="text/javascript" src="qrcode.js"></script>
     
     <script>
         $(function() {
@@ -189,41 +191,63 @@
                 else {
                     var signature = signaturePad.toDataURL('image/jpeg', 0.2);
                     
-                    $.ajax({
-                        url: event.target.action,
-                        method: event.target.method,
-                        data: JSON.stringify({
-                            name: name,
-                            companyName: companyName,
-                            temperature: temperature,
-                            phone: phone,
-                            email: email,
-                            countryStay: countryStay,
-                            identityId: identityId,
-                            notes: notes,
-                            signature: signature
-                        }),
-                        contentType: "application/json; charset=utf-8",
-                        dataType: "json",
-                        success: function(data) {
-                            $("#name").val("");
-                            $("#companyName").val("");
-                            $("#temperature").val("");
-                            $("#phone").val("");
-                            $("#countryStay").val("");
-                            $("#email").val("");
-                            $("#identityId").val("");
-                            $("#notes").val("");
-                            signaturePad.clear();
-                            $( "#agreement" ).prop( "checked", false );
-                            $("#messageMessage").text("Record Inserted!");
-                            $("#message").show();
-                        },
-                        error: function(err) {
-                            errorMessage.text(err.responseJSON.error);
-                            error.show();
-                        }
-                    })
+                    sleep(3000);
+                   
+                    $("#name").val("");
+                    $("#companyName").val("");
+                    $("#temperature").val("");
+                    $("#phone").val("");
+                    $("#countryStay").val("");
+                    $("#email").val("");
+                    $("#identityId").val("");
+                    $("#notes").val("");
+                    signaturePad.clear();
+                    $( "#agreement" ).prop( "checked", false );
+                    $("#messageMessage").text("Record Inserted!");
+                    $("#message").show();
+                    
+                    var typeNumber = 4;
+                    var errorCorrectionLevel = 'L';
+                    var qr = qrcode(typeNumber, errorCorrectionLevel);
+                    qr.addData('AA-0000001');
+                    qr.make();
+                    document.getElementById('placeHolder').innerHTML = qr.createImgTag();
+                    
+//                     $.ajax({
+//                         url: event.target.action,
+//                         method: event.target.method,
+//                         data: JSON.stringify({
+//                             name: name,
+//                             companyName: companyName,
+//                             temperature: temperature,
+//                             phone: phone,
+//                             email: email,
+//                             countryStay: countryStay,
+//                             identityId: identityId,
+//                             notes: notes,
+//                             signature: signature
+//                         }),
+//                         contentType: "application/json; charset=utf-8",
+//                         dataType: "json",
+//                         success: function(data) {
+//                             $("#name").val("");
+//                             $("#companyName").val("");
+//                             $("#temperature").val("");
+//                             $("#phone").val("");
+//                             $("#countryStay").val("");
+//                             $("#email").val("");
+//                             $("#identityId").val("");
+//                             $("#notes").val("");
+//                             signaturePad.clear();
+//                             $( "#agreement" ).prop( "checked", false );
+//                             $("#messageMessage").text("Record Inserted!");
+//                             $("#message").show();
+//                         },
+//                         error: function(err) {
+//                             errorMessage.text(err.responseJSON.error);
+//                             error.show();
+//                         }
+//                     })
                 }
             });
         });
