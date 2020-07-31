@@ -60,7 +60,7 @@
         <form id="insertForm" action="/visitor" method="post" style="width: auto">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h3 class="panel-title">Medical Record</h3>
+                    <h3 class="panel-title">Contractor Record</h3>
                 </div>
                 <div class="panel-body">
                     
@@ -191,27 +191,31 @@
                 else {
                     var signature = signaturePad.toDataURL('image/jpeg', 0.2);
                     
-                    sleep(3000);
-                   
-                    $("#name").val("");
-                    $("#companyName").val("");
-                    $("#temperature").val("");
-                    $("#phone").val("");
-                    $("#countryStay").val("");
-                    $("#email").val("");
-                    $("#identityId").val("");
-                    $("#notes").val("");
-                    signaturePad.clear();
-                    $( "#agreement" ).prop( "checked", false );
-                    $("#messageMessage").text("Record Inserted!");
-                    $("#message").show();
+                    setTimeout(function() {
+                        
+                        $("#name").val("");
+                        $("#companyName").val("");
+                        $("#temperature").val("");
+                        $("#phone").val("");
+                        $("#countryStay").val("");
+                        $("#email").val("");
+                        $("#identityId").val("");
+                        $("#notes").val("");
+                        signaturePad.clear();
+                        $( "#agreement" ).prop( "checked", false );
+                        $("#messageMessage").text("Record Inserted!");
+                        $("#message").show();
+
+                        var typeNumber = 4;
+                        var errorCorrectionLevel = 'L';
+                        var qr = qrcode(typeNumber, errorCorrectionLevel);
+                        qr.addData('AA-0000001');
+                        qr.make();
+                        document.getElementById('placeHolder').innerHTML = qr.createImgTag();
+                        
+                    }, 3000);
                     
-                    var typeNumber = 4;
-                    var errorCorrectionLevel = 'L';
-                    var qr = qrcode(typeNumber, errorCorrectionLevel);
-                    qr.addData('AA-0000001');
-                    qr.make();
-                    document.getElementById('placeHolder').innerHTML = qr.createImgTag();
+                    
                     
 //                     $.ajax({
 //                         url: event.target.action,
