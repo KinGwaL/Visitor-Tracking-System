@@ -121,6 +121,26 @@ app.post('/insertrecord', function(req, res) {
 });
 
 
+app.post('/insertVisitor', function(req, res) {
+    pg.connect(process.env.DATABASE_URL, function (err, conn, done) {
+        // watch for any connect issues
+        if (err) console.log(err);
+        conn.query(
+            'INSERT INTO salesforce.Visitor__c (Company_Name__c, Email__c, Event_Name__c, Phone_Number__c) VALUES ($1, $2, $3, $4)',
+            [req.body.name.trim(), req.body.email.trim(), req.body.eventName.trim(), req.body.phone.trim()],
+            function(err, result) {
+                done();
+                if (err) {
+                    res.status(400).json({error: err.message});
+                }
+                else {
+                    res.json(result);
+                }
+            }
+        );
+    });
+});
+
 app.post('/insert', function(req, res) {
     pg.connect(process.env.DATABASE_URL, function (err, conn, done) {
         // watch for any connect issues
