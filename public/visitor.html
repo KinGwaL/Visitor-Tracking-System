@@ -211,7 +211,7 @@
                         var qr = qrcode(typeNumber, errorCorrectionLevel);
                         qr.addData('AA-0000001');
                         qr.make();
-                        document.getElementById('placeHolder').innerHTML = qr.createImgTag();
+                        document.getElementById('placeHolder').innerHTML = qr.createImgTag(10);
                         
                     }, 3000);
                     
